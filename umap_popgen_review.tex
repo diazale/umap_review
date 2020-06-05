@@ -1,0 +1,262 @@
+% Use only LaTeX2e, calling the article.cls class and 12-point type.
+
+\documentclass[12pt]{article}
+
+\usepackage{scicite}
+\usepackage{lineno}
+\linenumbers
+
+% Use times if you have the font installed; otherwise, comment out the
+% following line.
+
+\usepackage{times}
+\usepackage{hyperref}
+
+
+\topmargin 0.0cm
+\oddsidemargin 0.2cm
+\textwidth 16cm 
+\textheight 21cm
+\footskip 1.0cm
+
+
+\newenvironment{sciabstract}{%
+\begin{quote} \bf}
+{\end{quote}}
+
+
+% If your reference list includes text notes as well as references,
+% include the following line; otherwise, comment it out.
+
+\renewcommand\refname{References and Notes}
+
+% The following lines set up an environment for the last note in the
+% reference list, which commonly includes acknowledgments of funding,
+% help, etc.  It's intended for users of BibTeX or the {thebibliography}
+% environment.  Users who are hand-coding their references at the end
+% using a list environment such as {enumerate} can simply add another
+% item at the end, and it will be numbered automatically.
+
+\newcounter{lastnote}
+\newenvironment{scilastnote}{%
+\setcounter{lastnote}{\value{enumiv}}%
+\addtocounter{lastnote}{+1}%
+\begin{list}%
+{\arabic{lastnote}.}
+{\setlength{\leftmargin}{.22in}}
+{\setlength{\labelsep}{.5em}}}
+{\end{list}}
+
+
+% Include your paper's title here
+\title{A review of UMAP in population genetics} 
+
+
+% Place the author information here.  Please hand-code the contact
+% information and notecalls; do *not* use \footnote commands.  Let the
+% author contact information appear immediately below the author names
+% as shown.  We would also prefer that you don't change the type-size
+% settings shown here.
+
+\author
+{Alex Diaz-Papkovich,$^{1,2}$ Simon Gravel$^{2\ast}$\\
+\\
+\normalsize{$^{1}$Quantitative Life Sciences Program, McGill University, Montreal,}\\
+\normalsize{$^{2}$Department of Human Genetics, McGill University, Montreal}\\
+\\
+\normalsize{$^\ast$To whom correspondence should be addressed; E-mail:  simon.gravel@mcgill.ca.}
+}
+
+% Include the date command, but leave its argument blank.
+
+\date{}
+
+
+
+%%%%%%%%%%%%%%%%% END OF PREAMBLE %%%%%%%%%%%%%%%%
+
+
+
+\begin{document} 
+
+% Double-space the manuscript.
+
+\baselineskip24pt
+
+% Make the title.
+
+\maketitle 
+
+
+
+% Place your abstract within the special {sciabstract} environment.
+
+\begin{sciabstract}
+Hello world, this is my abstract
+\end{sciabstract}
+
+
+
+% In setting up this template for *Science* papers, we've used both
+% the \section* command and the \paragraph* command for topical
+% divisions.  Which you use will of course depend on the type of paper
+% you're writing.  Review Articles tend to have displayed headings, for
+% which \section* is more appropriate; Research Articles, when they have
+% formal topical divisions at all, tend to signal them with bold text
+% that runs into the paragraph, for which \paragraph* is the right
+% choice.  Either way, use the asterisk (*) modifier, as shown, to
+% suppress numbering.
+
+\section*{Introduction}
+The original paper is here. I can explain some good theoretical stuff\cite{mcinnes_umap_2018}. One of the first uses for UMAP was visualizing single-cell data \cite{becht_dimensionality_2019}. They also argued that it was superior to other methods, specifically LargeVis and t-SNE. Perhaps worth mentioning this paper here\cite{kobak_art_2019}.
+
+My paper shows useful things. This is the first time UMAP was used for population genetics.\cite{diaz-papkovich_umap_2019}! UMAP is cool! 
+
+Make some notes on how input->output. Specifically that varying parameters and input data will result in different outputs (e.g. different clusters). A lot of data gets compressed down to two dimensions. Similar to how maps get distorted from 3D to 2D, we must necessarily distort the relationships between points (individuals and groups).
+
+
+\section*{Overview}
+
+\subsection*{Human genetics}
+
+\subsubsection*{Visualizing ancestral diversity in cohorts}
+The most straightforward use of UMAP is to visualize the ancestral composition of a cohort. This has been done in numerous cases.
+
+The Genome Aggregation Database (gnomAD) contained data on $125,748$ exomes and $15,708$ whole genomes and used UMAP to illustrate the ancestral diversity of the cohort.\cite{karczewski_mutational_2020} 
+
+
+Belbin et al\cite{belbin_towards_2019} linked $36,061$ individuals in the Bio\emph{Me} dataset to New York City's Mount Sinai Health System and compared self-reported ethnicity in Bio\emph{Me} enrollment to the ethnicity in the health system's electronic health records. In characterizing the genetic ancestry of individuals, they used $31,705$ genotyped individuals combined with a reference panel of $87$ individuals from $7$ continental or subcontinental regions.
+\begin{itemize}
+\item{$MAF > 0.01$}
+\item{Removed regions of recent selection (HLA, LCT, chr8 inv, extended LD on chr17, EDAR, SLC2A5, TRBV9}
+\item{Intersected with $26$ populations from 1KGP(3), 53 from HGDP, 8 from PAGE}
+\item{n=260502 SNPs and N=35854 individuals}
+\item{UMAP on top 10 PCs, used default settings in R}
+\end{itemize}
+
+Margaryan et al\cite{margaryan_population_2019} studied the ancient genomes of $442$ individuals from across Europe and Greenland, dating from as early as c. 2400 BCE to 1600 CE. UMAP was used as part of a series of methods to identify relationships between Viking Age Scandinavians and other contemporary European populations. Running UMAP on the top $10$ components of an MDS projection of IBS data, they found clusters. Also ran UMAP on IBS data. Images were followed up with analysis. Supplemented with $f_4$ statistics, ChromoPainter, fineStructure, admixture analysis.
+
+\subsection*{Non-human genetics}
+
+Study of marine mussel species and spatial introgression. Took the top 11 PCs and based this on the expectation that there would be 12 panmictic populations. Correctly note that UMAP doesn't conserve distances but groups local neighbours.\cite{simon_local_2019}
+
+More t-SNE than UMAP, but used for species delineation.\cite{derkarabetian_demonstration_2019}
+
+Taxonomic work. Mostly touching on UMAP as one of many approaches to look at population structure. \cite{greenbaum_network-based_2019}
+
+Developing another method for genetic clustering.\cite{tonkin-hill_fast_2019}
+
+Constructed artificial genomes and used UMAP to measure whether they were reconstructing population structure accurately.\cite{yelmen_creating_2019}
+
+Study looking at population structure in structural variants in human genomes. Identified endemic variants. Ran UMAP on different types of variants: insertions, deletions, duplications, multiallelic. Varied the number of PCs as well as parameters for UMAP projections. "we present a comprehensive analysis of
+deletions, duplications, insertions, inversions and non-reference unique insertions in the
+20 Human Genome Diversity Project (HGDP-CEPH) panel, a high-coverage dataset of 911
+samples from 54 diverse worldwide populations. We identify in total 126,018 structural variants
+(25,588 $<$100 bp in size), of which 78\% are novel. Some reach high frequency and are private
+to continental groups or even individual populations, including a deletion in the maltaseglucoamylase
+gene MGAM involved in starch digestion, in the South American Karitiana and
+25 a deletion in the Central African Mbuti in SIGLEC5, potentially leading to immune hyperactivity.
+We discover a dynamic range of copy number expansions and find cases of regionallyrestricted
+runaway duplications, for example, 18 copies near the olfactory receptor OR7D2 in
+East Asia and in the clinically-relevant HCAR2 in Central Asia."\cite{almarri_population_2020}
+
+Genome variation and population structure in mosquito populations. Looked at PCA and Admixture analysis as well to find/corroborate population structure. Also used AIM and $F_{ST}$ and downsampled so that population sizes would be equal and take up the same space.\cite{consortium_genome_2020}
+
+National Geographic Genographic
+Project. Used UMAP on top 20 PCs to visualize population structure (combined with the 1KGP data). Varied parameters and also combined with POPRES data to look at population substructure. Illustrate the complex admixture and history of populations and used in conjunction with other types of analyses.\cite{zhang_generalized_2020}
+
+Million Veterans Program (MVP) massive database, very genetically diverse. Ran UMAP on top 10 PCs and 15 NN  and mindist of 0.1 to visualize the genetic diversity in the data. \cite{hunter-zinck_genotyping_2020}
+
+Test a variety of dimension reduction methods on BBJ data. Motivated to study population structure as it affects biomedical studies.\cite{sakaue_dimensionality_2020}
+
+Visualizing ancestral diversity in MexAm populations.\cite{spear2020recent}
+
+Rhino genetics. Found geographically-rooted substructure in rhino populations.\cite{sanchez-barreiro_historical_2020}
+
+mtDNA of the Japanese population has been studied. Identified sub-haplogroups.\cite{yamamoto_genetic_2020}
+
+-Uses in population genetics of humans
+
+-Uses in population genetics of non-humans
+
+\section*{Discussion}
+
+-Note: Need to have a comment on UMAP/clustering and race
+
+-UMAP works best in conjunction with other methods to follow up on signals.
+
+-Combinations of data sources (reference panels, cohorts, ancient and modern genomes)
+
+%\section*{Formatting Citations}
+
+%You can also generate your reference lists by using the list environment \texttt{\{thebibliography\}} at the end of your source document; here again, you may find the \texttt{scicite.sty} file useful.
+
+\bibliography{umap_popgen_review}
+
+\bibliographystyle{Science}
+
+
+
+% Following is a new environment, {scilastnote}, that's defined in the
+% preamble and that allows authors to add a reference at the end of the
+% list that's not signaled in the text; such references are used in
+% *Science* for acknowledgments of funding, help, etc.
+
+\begin{scilastnote}
+\item We've included in the template file \texttt{scifile.tex} a new
+environment, \texttt{\{scilastnote\}}, that generates a numbered final
+citation without a corresponding signal in the text.  This environment
+can be used to generate a final numbered reference containing
+acknowledgments, sources of funding, and the like, per {\it Science\/}
+style.
+\end{scilastnote}
+
+
+
+
+% For your review copy (i.e., the file you initially send in for
+% evaluation), you can use the {figure} environment and the
+% \includegraphics command to stream your figures into the text, placing
+% all figures at the end.  For the final, revised manuscript for
+% acceptance and production, however, PostScript or other graphics
+% should not be streamed into your compliled file.  Instead, set
+% captions as simple paragraphs (with a \noindent tag), setting them
+% off from the rest of the text with a \clearpage as shown  below, and
+% submit figures as separate files according to the Art Department's
+% instructions.
+
+
+\clearpage
+
+\noindent {\bf Fig. 1.} Please do not use figure environments to set
+up your figures in the final (post-peer-review) draft, do not include graphics in your
+source code, and do not cite figures in the text using \LaTeX\
+\verb+\ref+ commands.  Instead, simply refer to the figure numbers in
+the text per {\it Science\/} style, and include the list of captions at
+the end of the document, coded as ordinary paragraphs as shown in the
+\texttt{scifile.tex} template file.  Your actual figure files should
+be submitted separately.
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
