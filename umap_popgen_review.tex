@@ -136,40 +136,37 @@ Belbin et al\cite{belbin_towards_2019} linked $36,061$ individuals in the Bio\em
 
 Margaryan et al\cite{margaryan_population_2019} studied the ancient genomes of $442$ individuals from across Europe and Greenland, dating from as early as c. 2400 BCE to 1600 CE. UMAP was used as part of a series of methods to identify relationships between Viking Age Scandinavians and other contemporary European populations. Running UMAP on the top $10$ components of an MDS projection of IBS data, they found clusters. Also ran UMAP on IBS data. Images were followed up with analysis. Supplemented with $f_4$ statistics, ChromoPainter, fineStructure, admixture analysis.
 
-\subsection*{Non-human genetics}
-
-Study of marine mussel species and spatial introgression. Took the top 11 PCs and based this on the expectation that there would be 12 panmictic populations. Correctly note that UMAP doesn't conserve distances but groups local neighbours.\cite{simon_local_2019}
-
-More t-SNE than UMAP, but used for species delineation.\cite{derkarabetian_demonstration_2019}
-
-Taxonomic work. Mostly touching on UMAP as one of many approaches to look at population structure. \cite{greenbaum_network-based_2019}
-
-Developing another method for genetic clustering.\cite{tonkin-hill_fast_2019}
-
-Constructed artificial genomes and used UMAP to measure whether they were reconstructing population structure accurately.\cite{yelmen_creating_2019}
-
-Study looking at population structure in structural variants in human genomes. Identified endemic variants. Ran UMAP on different types of variants: insertions, deletions, duplications, multiallelic. Varied the number of PCs as well as parameters for UMAP projections. "we present a comprehensive analysis of
-deletions, duplications, insertions, inversions and non-reference unique insertions in the
-20 Human Genome Diversity Project (HGDP-CEPH) panel, a high-coverage dataset of 911
-samples from 54 diverse worldwide populations. We identify in total 126,018 structural variants
-(25,588 $<$100 bp in size), of which 78\% are novel. Some reach high frequency and are private
-to continental groups or even individual populations, including a deletion in the maltaseglucoamylase
-gene MGAM involved in starch digestion, in the South American Karitiana and
-25 a deletion in the Central African Mbuti in SIGLEC5, potentially leading to immune hyperactivity.
-We discover a dynamic range of copy number expansions and find cases of regionallyrestricted
-runaway duplications, for example, 18 copies near the olfactory receptor OR7D2 in
-East Asia and in the clinically-relevant HCAR2 in Central Asia."\cite{almarri_population_2020}
-
-Genome variation and population structure in mosquito populations. Looked at PCA and Admixture analysis as well to find/corroborate population structure. Also used AIM and $F_{ST}$ and downsampled so that population sizes would be equal and take up the same space.\cite{consortium_genome_2020}
+In the Almarri study, they took the Human Genome Diversity Project (HGDP-CEPH) panel of 911 samples from 54 populations worldwide and examined population structure within the structural variants. A UMAP projection of deletion variants in genotype data found separation on the continental and even individual population level variants. Other structural variants, such as insertions, duplications, multiallelic variants, and inversions also show population structure, though to a lesser degree than deletions. This allowed the investigation of variants that were private to specific populations. UMAP provided an advantage as a high number of principal components showed structure. The number of PCs selected varied by the type of structural variant, ranging from 4 biallelic duplications to 20 for deletion genotypes.\cite{almarri_population_2020}
 
 National Geographic Genographic
-Project. Used UMAP on top 20 PCs to visualize population structure (combined with the 1KGP data). Varied parameters and also combined with POPRES data to look at population substructure. Illustrate the complex admixture and history of populations and used in conjunction with other types of analyses.\cite{zhang_generalized_2020}
+Project. Used UMAP on top 20 PCs to visualize population structure (combined with the 1KGP data). Varied parameters and also combined with POPRES data to look at population substructure. Illustrate the complex admixture and history of populations and used in conjunction with other types of analyses.
+
+% Not really UMAP related
+%\cite{zhang_generalized_2020}
 
 Million Veterans Program (MVP) massive database, very genetically diverse. Ran UMAP on top 10 PCs and 15 NN  and mindist of 0.1 to visualize the genetic diversity in the data. \cite{hunter-zinck_genotyping_2020}
 
 Test a variety of dimension reduction methods on BBJ data. Motivated to study population structure as it affects biomedical studies.\cite{sakaue_dimensionality_2020}
 
 Visualizing ancestral diversity in MexAm populations.\cite{spear2020recent}
+
+\subsection*{Non-human genetics}
+
+Study of marine mussel species and spatial introgression. Took the top 11 PCs and based this on the expectation that there would be 12 panmictic populations. Correctly note that UMAP doesn't conserve distances but groups local neighbours. To filter out linkage, PCA was carried out on markers of different physical contigs, retaining those with the least missing data. The final data were 160 markers. Further analysis was carried out with Structure. \cite{simon_local_2019}
+
+Unsupervised machine learning has been broached as a method for species delineation. In one study, it was used on a taxon of arachnids with significant genetic structure (Opiliones, Laniatores, Metanonychus). Note: this one used more t-SNE than UMAP, but noted that UMAP was a new method that could be used.\cite{derkarabetian_demonstration_2019}
+
+Taxonomic work. Briefly mentions UMAP as one of many approaches to visualize population structure. \cite{greenbaum_network-based_2019}
+
+Motivated to develop a method of clustering for multi-locus genotype data. The data they used here was $110,000$ sequences of HIV-1 Pol genes as well as several bacterial datasets. UMAP was noted as being useful for when model-based methods do not provide a clear answer as to how many population clusters one should expect. Probably relevant for population genetics as selecting $K$ is arbitrary. Also the visualizations are good for variations within populations.\cite{tonkin-hill_fast_2019}
+
+% unclear what they used this for -- referencing non-existant supp figure?
+%Constructed artificial genomes and used UMAP to measure whether they were reconstructing population structure accurately.\cite{yelmen_creating_2019}
+
+The The Anopheles gambiae 1000 Genomes (Ag1000G) project aims to build a large scale biobank of mosquito genomes. In phase 2 of the project, they analyzed the whole genomes of $1,142$ wild and $234$ laboratory mosquitoes of \textit{Anopheles gambiae} and \textit{Anopheles coluzzii}, the major African malaria vector species. UMAP was carried out on biallelic SNPs of the euchromatic regions of Chromosome 3 in order to visualize population structure among the species and analyse whether there were differences among mosquitoes between countries. The data were pruned for LD. The dimension reduction was supplemented with PCA and Admixture analysis as well to find/corroborate population structure. Also used AIM and $F_{ST}$ and downsampled so that population sizes would be equal and take up the same space.\cite{consortium_genome_2020}
+
+
+UMAP was also used to study the invasive arbovirus vectors \textit{Aedes aegypti} and \textit{Ae. albopictus}. These mosquitoes can spread through human travel and the Indo-Pacific is responsible for $70\%$ of global dengue transmission. Four hundred eighty mosquitoes were sampled from the Indo-Pacific to study their genetic differences. The PCA-UMAP approach was supplemented with discriminant analysis of principal components (DAPC[57]), and sparse non-negative matrix factorisation (sNMF [58]). They used the top 5 PCs. The UMAP projections were used to track genetic relatedness between invasive species.\cite{schmidt_population_2020}
 
 Rhino genetics. Found geographically-rooted substructure in rhino populations.\cite{sanchez-barreiro_historical_2020}
 
