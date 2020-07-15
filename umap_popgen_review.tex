@@ -108,47 +108,54 @@ Hello world, this is my abstract
 % suppress numbering.
 
 \section*{Introduction}
-The original paper is here. I can explain some good theoretical stuff\cite{mcinnes_umap_2018}. One of the first uses for UMAP was visualizing single-cell data \cite{becht_dimensionality_2019}. They also argued that it was superior to other methods, specifically LargeVis and t-SNE. Perhaps worth mentioning this paper here\cite{kobak_art_2019}.
+One of the primary challenges in genomics is its intrinsic high dimensionality. The human genome, as an example, has over three billion base pairs, and research using modern biobank data typically includes at least several hundred thousand individuals. The curse of dimensionality is that while data is plentiful, signal is sparse and often confounded. One prominent example is the confounding of GWAS results caused by population stratification, also called population structure. Thus to make effective inferences on genomic data, one must take steps to reduce its dimensionality using methods that are meaningful and practical. 
 
-My paper shows useful things. This is the first time UMAP was used for population genetics.\cite{diaz-papkovich_umap_2019}! UMAP is cool! 
+One of the most common methods of dimensionality reduction to address population structure is principal component analysis (PCA). This linear transformation projects genomic data to a set of lower dimensional planes, which are ordered such that they explain the most-to-least variance. This approach is well-suited to, for example, the correction of population structure in genome-wide association studies (GWAS).\cite{patterson2006population} Plots of genomic data transformed using PCA are near-ubiquitous in the literature.
 
-Make some notes on how input->output. Specifically that varying parameters and input data will result in different outputs (e.g. different clusters). A lot of data gets compressed down to two dimensions. Similar to how maps get distorted from 3D to 2D, we must necessarily distort the relationships between points (individuals and groups).
+PCA can struggle to uncover fine-scale population structure; since the mathematical approach to PCA is built on representing the global variance of data, local patterns are more difficult to parse. Many nonlinear neighbour graph-based dimension reduction algorithms have been developed over the years to address this need. Here we focus on uniform manifold approximation and projection (UMAP)\cite{mcinnes_umap_2018}, a method developed in 2018 that has seen widespread in many fields (e.g. single-cell genomics\cite{becht_dimensionality_2019}). 
 
+UMAP models the high-dimensional topology of data by constructing a neighbourhood around each point and assigning a probability of that a pre-determined number of nearby points belong to the neighbourhood via fuzzy sets. It then optimizes a low-dimensional representation that preserves these neighbourhoods and patches them together. There are two main parameters for users to consider: the number of neighbours to include in a neighbourhood, and the minimum distance between points in the low-dimensional representation. In the context of genetic data, UMAP creates low-dimensional representations that group more closely-related individuals together while preserving longer-range relatedness through intermediary individuals. When used in visualizations, UMAP embeddings uncover many subtle features of data, such as distinct demographic histories and covariation between genetics, geography, and phenotypes\cite{diaz-papkovich_umap_2019}.
+
+Since its first use in population genetics, UMAP has become widely used to study population structure in humans and other species. It has a become a popular addition to research in conjuction with existing methods such as Admixture, linear mixed models, and PCA itself. Here we will describe the current state of the use of UMAP in population genetics.
 
 \section*{Overview}
 
+Before using UMAP, researchers need to consider their input data, as this will determine the output. The studies cited here have used data from genotypes, exomes, mitochondrial DNA (mtDNA), identity-by-descent (IBD) matrices, structural variants, specific genes, and contig markers, among others. It is also common to use the top principal components of data to ensure computational feasibility, though the number of top components used varies widely. The type of data will reflect a particular aspect of population structure and may have different results when using the same samples in a study. Further, it is possible to combine ancient genomes with contemporary genomes, or to compare the genomes of different species in order to, for example, reconstruct phylogenetic trees. For clarity, this overview will be split into human and non-human studies.
+
 \subsection*{Human genetics}
-
 \subsubsection*{Visualizing ancestral diversity in cohorts}
-The most straightforward use of UMAP is to visualize the ancestral composition of a cohort. This has been done in numerous cases.
+The most straightforward and common use of UMAP is for visualization, and with human data it is often used to illustrate and characterize the ancestral composition of a cohort. This has proven useful both for data composed of relatively homogeneous populations as well as those with considerable diversity in ancestries. Often these data are used with reference panels such as the 1000 Genomes Project (1KGP)\cite{10002015global} and Human Genome Diversity Project (HGDP)\cite{cann2002human}. Researchers may use them jointly or project their data onto UMAP embeddings of reference data, or vice versa. Generally, data is restricted to common variants with a minor allele frequency (MAF) greater than some threshold, e.g. $0.01$.
 
-The Genome Aggregation Database (gnomAD) contained data on $125,748$ exomes and $15,708$ whole genomes and used UMAP to illustrate the ancestral diversity of the cohort.\cite{karczewski_mutational_2020} 
+(Insert 1KGP figure here?)
 
-
-Belbin et al\cite{belbin_towards_2019} linked $36,061$ individuals in the Bio\emph{Me} dataset to New York City's Mount Sinai Health System and compared self-reported ethnicity in Bio\emph{Me} enrollment to the ethnicity in the health system's electronic health records. In characterizing the genetic ancestry of individuals, they used $31,705$ genotyped individuals combined with a reference panel of $87$ individuals from $7$ continental or subcontinental regions.
-\begin{itemize}
-\item{$MAF > 0.01$}
-\item{Removed regions of recent selection (HLA, LCT, chr8 inv, extended LD on chr17, EDAR, SLC2A5, TRBV9}
-\item{Intersected with $26$ populations from 1KGP(3), 53 from HGDP, 8 from PAGE}
-\item{n=260502 SNPs and N=35854 individuals}
-\item{UMAP on top 10 PCs, used default settings in R}
-\end{itemize}
-
-Margaryan et al\cite{margaryan_population_2019} studied the ancient genomes of $442$ individuals from across Europe and Greenland, dating from as early as c. 2400 BCE to 1600 CE. UMAP was used as part of a series of methods to identify relationships between Viking Age Scandinavians and other contemporary European populations. Running UMAP on the top $10$ components of an MDS projection of IBS data, they found clusters. Also ran UMAP on IBS data. Images were followed up with analysis. Supplemented with $f_4$ statistics, ChromoPainter, fineStructure, admixture analysis.
-
-In the Almarri study, they took the Human Genome Diversity Project (HGDP-CEPH) panel of 911 samples from 54 populations worldwide and examined population structure within the structural variants. A UMAP projection of deletion variants in genotype data found separation on the continental and even individual population level variants. Other structural variants, such as insertions, duplications, multiallelic variants, and inversions also show population structure, though to a lesser degree than deletions. This allowed the investigation of variants that were private to specific populations. UMAP provided an advantage as a high number of principal components showed structure. The number of PCs selected varied by the type of structural variant, ranging from 4 biallelic duplications to 20 for deletion genotypes.\cite{almarri_population_2020}
+The third version of Genome Aggregation Database (gnomAD v3) from the Broad Institute contains data on $125,748$ exomes and $15,708$ whole genomes and used UMAP on the top ten principal components to illustrate the ancestral diversity of the cohort\cite{karczewski_mutational_2020}. Similarly, the Bio\textit{Me} biobank is a multi-ethnic cohort curated by the Mount Sinai Health System in New York City with $36,061$ individuals linked to electronic health records. In order to visualize the cohort's fine-scale structure, they used UMAP on the top ten principal components of $31,705$ genotyped individuals combined with a reference panel of $87$ individuals from $7$ continental or subcontinental regions using the 1KGP, HGDP, and the Population Architecture Using Genetics and Epidemiology (PAGE) Study\cite{matise2011next}. They filtered the data to remove regions of recent selection and regions of extended linkage disequilibrium resulting in $260,502$ SNPs.
+%Belbin et al\cite{belbin_towards_2019} linked $36,061$ individuals in the Bio\emph{Me} dataset to New York City's Mount Sinai Health System and compared self-reported ethnicity in Bio\emph{Me} enrollment to the ethnicity in the health system's electronic health records. In characterizing the genetic ancestry of individuals, they used $31,705$ genotyped individuals combined with a reference panel of $87$ individuals from $7$ continental or subcontinental regions.
+%\begin{itemize}
+%\item{$MAF > 0.01$}
+%\item{Removed regions of recent selection (HLA, LCT, chr8 inv, extended LD on chr17, EDAR, SLC2A5, TRBV9}
+%\item{Intersected with $26$ populations from 1KGP(3), 53 from HGDP, 8 from PAGE}
+%\item{n=260502 SNPs and N=35854 individuals}
+%\item{UMAP on top 10 PCs, used default settings in R}
+%\end{itemize}
 
 National Geographic Genographic
 Project. Used UMAP on top 20 PCs to visualize population structure (combined with the 1KGP data). Varied parameters and also combined with POPRES data to look at population substructure. Illustrate the complex admixture and history of populations and used in conjunction with other types of analyses.
 
-% Not really UMAP related
-%\cite{zhang_generalized_2020}
+Million Veterans Program (MVP) massive database, very genetically diverse. Ran UMAP on top 10 PCs and 15 NN  and mindist of 0.1 to visualize the genetic diversity in the data. Used UMAP to characterize the population ethnicity, in combination with PCA and Admixture.\cite{hunter-zinck_genotyping_2020}
 
-Million Veterans Program (MVP) massive database, very genetically diverse. Ran UMAP on top 10 PCs and 15 NN  and mindist of 0.1 to visualize the genetic diversity in the data. \cite{hunter-zinck_genotyping_2020}
+Visualizing ancestral diversity in Latin-American populations, as groups can have overlapping/similar proportions of global ancestry but have different demographic histories.\cite{spear2020recent}
 
-Test a variety of dimension reduction methods on BBJ data. Motivated to study population structure as it affects biomedical studies.\cite{sakaue_dimensionality_2020}
+\*subsubsection{Population structure of types of genetic data}
 
-Visualizing ancestral diversity in MexAm populations.\cite{spear2020recent}
+In the Almarri study, they took the Human Genome Diversity Project (HGDP-CEPH) panel of 911 samples from 54 populations worldwide and examined population structure within the structural variants. A UMAP projection of deletion variants in genotype data found separation on the continental and even individual population level variants. Other structural variants, such as insertions, duplications, multiallelic variants, and inversions also show population structure, though to a lesser degree than deletions. This allowed the investigation of variants that were private to specific populations. UMAP provided an advantage as a high number of principal components showed structure. The number of PCs selected varied by the type of structural variant, ranging from 4 biallelic duplications to 20 for deletion genotypes.\cite{almarri_population_2020}
+
+mtDNA of the Japanese population has been studied. Identified sub-haplogroups. Used it to cluster into groups (identified 20+) that were concordant with existing haplogroups. THey recommend using a variety of dimension reduction and clustering algorithms to better understand clustering and structure in mtDNA data.\cite{yamamoto_genetic_2020}
+
+Margaryan et al\cite{margaryan_population_2019} studied the ancient genomes of $442$ individuals from across Europe and Greenland, dating from as early as c. 2400 BCE to 1600 CE. UMAP was used as part of a series of methods to identify relationships between Viking Age Scandinavians and other contemporary European populations. Running UMAP on the top $10$ components of an MDS projection of IBS data, they found clusters. Also ran UMAP on IBS data. Images were followed up with analysis. Supplemented with $f_4$ statistics, ChromoPainter, fineStructure, admixture analysis.
+
+\*subsubsection{Clustering}
+
+Test a variety of dimension reduction methods on BBJ data. Motivated to study population structure as it affects biomedical studies. Found substructure within Japanese population. Separated Japanese population into mainland and Hokkaido-Ainu plus surrounding islands. Reflected the demographic history of Japan. When using the cluster membership as a GWAS covariate, they found significant differences in PRS.\cite{sakaue_dimensionality_2020}
 
 \subsection*{Non-human genetics}
 
@@ -168,13 +175,7 @@ The The Anopheles gambiae 1000 Genomes (Ag1000G) project aims to build a large s
 
 UMAP was also used to study the invasive arbovirus vectors \textit{Aedes aegypti} and \textit{Ae. albopictus}. These mosquitoes can spread through human travel and the Indo-Pacific is responsible for $70\%$ of global dengue transmission. Four hundred eighty mosquitoes were sampled from the Indo-Pacific to study their genetic differences. The PCA-UMAP approach was supplemented with discriminant analysis of principal components (DAPC[57]), and sparse non-negative matrix factorisation (sNMF [58]). They used the top 5 PCs. The UMAP projections were used to track genetic relatedness between invasive species.\cite{schmidt_population_2020}
 
-Rhino genetics. Found geographically-rooted substructure in rhino populations.\cite{sanchez-barreiro_historical_2020}
-
-mtDNA of the Japanese population has been studied. Identified sub-haplogroups.\cite{yamamoto_genetic_2020}
-
--Uses in population genetics of humans
-
--Uses in population genetics of non-humans
+The northern and southern white rhinoceros are related to each other but geographically isolated with no mating within the last $10,000$ years. The northern species has been declared extinct in the wild, while the souther species has survived after a severe population bottleneck. In addition to PCA and Admixture analysis, UMAP on modern and historical samples from museums revealed geographic substructure that predated the extinction of the north species and the bottleneck of the souther species.\cite{sanchez-barreiro_historical_2020}
 
 \section*{Discussion}
 
@@ -183,6 +184,8 @@ mtDNA of the Japanese population has been studied. Identified sub-haplogroups.\c
 -UMAP works best in conjunction with other methods to follow up on signals.
 
 -Combinations of data sources (reference panels, cohorts, ancient and modern genomes)
+
+-Make some notes on how input->output. Specifically that varying parameters and input data will result in different outputs (e.g. different clusters). A lot of data gets compressed down to two dimensions. Similar to how maps get distorted from 3D to 2D, we must necessarily distort the relationships between points (individuals and groups).
 
 %\section*{Formatting Citations}
 
