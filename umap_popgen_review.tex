@@ -153,9 +153,9 @@ Finding fine-scale structure with UMAP can illuminate geographic relationships a
 \section*{Discussion}
 In a short period of time, UMAP has become ubiquitous and its versatility is becoming clear. Importantly, though the method is useful, it is always combined with other methods of analysis such as fineSTRUCTURE\cite{lawson2012inference}, ADMIXTURE\cite{alexander2009fast}, or traditional statistics such as $F_{ST}$. It is good practice to do multiple runs as well as to run multiple parametrizations to ensure that results are not the consequence of a specific tuning. It is also recommended to continue using PCA plots, as PCA focuses more on global variation within data versus UMAP's emphasis on local similarities between data. This complementary approach can provide a clearer understanding of population structure and can clarify, for example, why admixed individuals fall within particular clusters.
 
-When considering which parameter values to use, studies varied the number of neighbours but typically used at least $10$; values lower than this may create separate clusters out of families. The minimum distance will impact the visualizations, with values closer to $0$ generating dense and separate clusters potentially more useful for analysis, while values from $0.1$ to $0.5$ are more common for visualizing a cohort's composition. Selecting a large number of neighbours ($NN > 100$) can merge clusters that would otherwise be separate at lower values, as in figure~\ref{fig:UMAP_connectivity}, because the simplicial complex underlying the UMAP embedding will include individuals that are more distantly related. Clusters tend separate when a population is more internally related, such as in island populations or in the presence of endogamous marriage; forcing the algorithm to find more neighbours than there are individuals in a cluster thus connects separate groups of points. Recent updates to the Python implementation of UMAP allow for 2D visualizations of the underlying simplicial complex, allowing researchers to see the impact of the number of neighbours parameter as well as how population clusters are connected to each other through individuals, such as in figure~\ref{fig:UMAP_connectivity}.
+When considering which parameter values to use, studies varied the number of neighbours but typically used at least $10$; values lower than this may create separate clusters out of families. The minimum distance will impact the visualizations, with values closer to $0$ generating dense and separate clusters potentially more useful for analysis, while values from $0.1$ to $0.5$ are more common for visualizing a cohort's composition. Selecting a large number of neighbours ($NN > 100$) can merge clusters that would otherwise be separate at lower values, as in figure~\ref{fig:UMAP_connectivity}, because the simplicial complex underlying the UMAP embedding will include individuals that are more distantly related. Clusters tend separate when a population is more internally related, such as in island populations or in the presence of endogamous marriage; forcing the algorithm to find more neighbours than there are individuals in a cluster thus connects separate groups of points. Recent updates to the Python implementation of UMAP allow for 2D visualizations of the underlying simplicial complex, allowing researchers to see the impact of the number of neighbours parameter as well as how population clusters can be connected to each other through individuals, such as in figure~\ref{fig:UMAP_connectivity}.
 
-The UMAP embeddings generated will be a result of their input data and parameterizations and are highly informative of population structure. While clusters will often be correlated with labels such as self-identified ethnicity or race, they are separate social constructs that should not be conflated. Working with different subsets or types of data will return different results.
+The UMAP embeddings generated are a result of their input data and parameterizations and are highly informative of population structure. While clusters will often be correlated with labels such as self-identified ethnicity or race, they are separate social constructs that should not be conflated. Working with different subsets or types of data will return different results.
 
 %%%%% FIGURES %%%%%
 
@@ -190,25 +190,25 @@ The UMAP embeddings generated will be a result of their input data and parameter
   \centering
   \begin{subfigure}[b]{0.49\linewidth}
     \includegraphics[width=\linewidth]{code/images/1KGP_genotype_UMAP_low_NN.png}
-    \caption{}
+    \caption{UMAP with 15 neighbours.}
     \label{fig:UMAP_low_NN_1KGP}
   \end{subfigure}
   \begin{subfigure}[b]{0.49\linewidth}
     \includegraphics[width=\linewidth]{code/images/1KGP_genotype_UMAP_high_NN.png}
-    \caption{}
+    \caption{UMAP with 200 neighbours.}
     \label{fig:UMAP_high_NN_1KGP}
   \end{subfigure}
   \begin{subfigure}[b]{0.49\linewidth}
     \includegraphics[width=\linewidth]{code/images/UMAP_connectivity_low_NN.png}
-    \caption{}
+    \caption{Connectivity map of 15 neighbours.}
     \label{fig:UMAP_low_NN_connectivity}
   \end{subfigure}
   \begin{subfigure}[b]{0.49\linewidth}
     \includegraphics[width=\linewidth]{code/images/UMAP_connectivity_high_NN.png}
-    \caption{}
+    \caption{Connectivity map of 200 neighbours.}
     \label{fig:UMAP_high_NN_connectivity}
   \end{subfigure}
-  \caption{Temp high NN }
+  \caption{UMAP on the genotype data of the 1KGP with a small (left) and large (right) number of nearest neighbours. Top images are coloured by population; bottom images are the same points but with the simplicial complex drawn. When adding more neighbours, clusters become less separated, as with the LWK population, for example. Looking at the connectivity maps, we see new connections between continental groups, such as the Central/South American clusters and East Asian clusters.}
   \label{fig:UMAP_connectivity}
 \end{figure}
 
