@@ -4,6 +4,7 @@
 
 \usepackage{scicite}
 \usepackage{lineno}
+\usepackage{color}
 \linenumbers
 
 % Use times if you have the font installed; otherwise, comment out the
@@ -31,6 +32,8 @@
 % include the following line; otherwise, comment it out.
 
 \renewcommand\refname{References and Notes}
+
+\newcommand{\sgcomment}[1]{\textcolor{red}{SG: #1}}
 
 % The following lines set up an environment for the last note in the
 % reference list, which commonly includes acknowledgments of funding,
@@ -116,9 +119,9 @@ One of the most common methods of dimensionality reduction to address population
 
 PCA can struggle to uncover fine-scale population structure; since the mathematical approach to PCA is built on representing the global variance of data, local patterns are more difficult to parse. Many nonlinear neighbour graph-based dimension reduction algorithms have been developed over the years to address this need. Here we focus on uniform manifold approximation and projection (UMAP)\cite{mcinnes_umap_2018}, a method developed in 2018 that has seen widespread in many fields (e.g. single-cell genomics\cite{becht_dimensionality_2019}). 
 
-UMAP models the high-dimensional topology of data by constructing a neighbourhood around each point and assigning a probability of that a pre-determined number of nearby points belong to the neighbourhood via fuzzy sets. It then optimizes a low-dimensional representation that preserves these neighbourhoods and patches them together. There are two main parameters for users to consider: the number of neighbours to include in a neighbourhood, and the minimum distance between points in the low-dimensional representation. In the context of genetic data, UMAP creates low-dimensional representations that group more closely-related individuals together while partially preserving longer-range relatedness through intermediary individuals. When used in visualizations, UMAP embeddings uncover many subtle features of data, such as distinct demographic histories and covariation between genetics, geography, and phenotypes\cite{diaz-papkovich_umap_2019}.
+UMAP models the high-dimensional topology of data by constructing a neighbourhood around each point and assigning a probability of that a pre-determined number of nearby points belong to the neighbourhood via fuzzy sets \sgcomment{define}. It then seeks a low-dimensional representation of the data that preserves these neighbourhoods and patches them together \sgcomment{"patches them together" is not immediately meaningful...}. There are two main parameters for users to consider: the number of neighbours to include in a neighbourhood, and the minimum distance between points in the low-dimensional representation \sgcomment{Perhaps explain why you need to define a minimum distance?}. In the context of genetic data, UMAP creates low-dimensional representations that group more closely-related individuals together while partially preserving longer-range relatedness through intermediary individuals. When used in visualizations, UMAP embeddings uncover many subtle features of data, such as distinct demographic histories and covariation between genetics, geography, and phenotypes\cite{diaz-papkovich_umap_2019}.
 
-Figure~\ref{fig:PCA_and_UMAP} compares visualizations of PCA to UMAP using genotype data from the Thousand Genomes Project (1KGP)\cite{10002015global}. PCA flattens the third dimension, obscuring South Asian and Central/South American populations, while UMAP places them in clearly visible clusters. Pre-processing the genotype data with PCA before using UMAP can highlight fine-scale population structure, as in figure~\ref{fig:UMAP_fine_scale}, where most 1KGP populations form their own clusters.
+Figure~\ref{fig:PCA_and_UMAP} compares visualizations of PCA to UMAP using genotype data from the Thousand Genomes Project (1KGP)\cite{10002015global}. PCA flattens the third dimension, obscuring South Asian and Central/South American populations, while UMAP places them in clearly visible clusters. Pre-processing the genotype data with PCA before using UMAP can highlight fine-scale population structure, as in figure~\ref{fig:UMAP_fine_scale}, where most 1KGP populations form their own clusters. \sgcomment{This is not clear to me (i.e., why this would happen, and whether this is true :)}
 
 Since its first use in population genetics, UMAP has become widely used to study population structure in humans and other species. It has a become a popular addition to research in conjuction with existing methods such as Admixture, linear mixed models, and PCA itself. Here we will describe the current state of the use of UMAP in population genetics.
 
