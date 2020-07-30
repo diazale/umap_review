@@ -69,7 +69,7 @@
 % settings shown here.
 
 \author
-{Alex Diaz-Papkovich,$^{1,2}$ Simon Gravel$^{2\ast}$\\
+{Alex Diaz-Papkovich$^{1,2}$, Luke Anderson-Trocm\'{e}$^{2}$, Simon Gravel$^{2\ast}$\\
 \\
 \normalsize{$^{1}$Quantitative Life Sciences Program, McGill University, Montreal,}\\
 \normalsize{$^{2}$Department of Human Genetics, McGill University, Montreal}\\
@@ -118,26 +118,16 @@ Rather than trying to preserve large-scale structure, UMAP seeks to preserve loc
 
 By focusing on preserving topology rather than absolute distances, UMAP representations can also contain arbitrarily small distances between points. Though such small distances might be a faithful representation of the original data, they are not ideal for visualization. UMAP allows for specification of a minimum distance between nearest neighbours in low-dimensional space. This is useful for visualization, but can be set to zero or very small values when using the reduced dimension representation for downstream analyses, such as clustering.
 
-
-
-%, with values closer to zero resulting in more tightly clumped data. 
-%\adpcomment{Best explanation (from the docs): The min_dist parameter controls how tightly UMAP is allowed to pack points together. It, quite literally, provides the minimum distance apart that points are allowed to be in the low dimensional representation. This means that low values of min_dist will result in clumpier embeddings. This can be useful if you are interested in clustering, or in finer topological structure. Larger values of min_dist will prevent UMAP from packing point together and will focus instead on the preservation of the broad topological structure instead.}
-
-
-
-
-%draws edges connecting it to a pre-set number of its nearest neighbours and creates a weighted neighbour-graph. The weight of each edge is a value between zero and one representing whether a point belongs to a neighbourhood; this neighbourhood can be thought of as a fuzzy open set. Since these sets and their edge weights are specific to each point, they must be combined by taking their union; in this sense, UMAP patches together all neighbourhoods and creates a weighted graph for the entire dataset. The algorithm then creates a low-dimensional representation that minimizes the difference between high- and low-dimensional edge weights. By focusing on the local structure of every point, it can piece together a low-dimensional representation. 
-
-In the context of genetic data, UMAP finds the nearest genetic neighbours for each individual and creates low-dimensional representations that group more closely-related individuals together, and partially preserves longer-range relatedness through intermediary individuals. When used in visualizations, UMAP embeddings uncover many subtle features of data, such as distinct demographic histories and covariation between genetics, geography, and phenotypes\cite{diaz-papkovich_umap_2019}. Figure~\ref{fig:PCA_and_UMAP} compares visualizations of PCA to UMAP using genotype data from the Thousand Genomes Project (1KGP)\cite{10002015global}. PCA flattens the third dimension, obsuring the distinction between South Asian and Central/South American populations, whereas UMAP places them in more clearly visible clusters. UMAP has become widely used to study population structure in humans and other species, becoming a popular addition to research in conjunction with existing methods. Here we will describe the current state of the use of UMAP in population genetics.
+In the context of genetic data, UMAP finds the nearest genetic neighbours for each individual and creates low-dimensional representations that group more closely-related individuals together, and partially preserves longer-range relatedness through intermediary individuals. When used in visualizations, UMAP embeddings uncover many subtle features of data, such as distinct demographic histories and covariation between genetics, geography, and phenotypes\cite{diaz-papkovich_umap_2019}. Figure~\ref{fig:PCA_and_UMAP} compares visualizations of PCA to UMAP using genotype data from the Thousand Genomes Project (1000GP)\cite{10002015global}. PCA flattens the third dimension, obsuring the distinction between South Asian and Central/South American populations, whereas UMAP places them in more clearly visible clusters. UMAP has become widely used to study population structure in humans and other species, becoming a popular addition to research in conjunction with existing methods. Here we will describe the current state of the use of UMAP in population genetics.
 
 \section*{Visualizing genomic cohorts}
 
-The most straightforward and common use of UMAP is for visualization. This has proven useful for data composed of relatively homogeneous populations as well as those with considerable diversity in ancestries. UMAP will dedicate more visual space to larger populations within a cohort, and consequently can illustrate the ancestral composition of a cohort in the context of its population structure as well as the size of the data. Often these data are combined with reference panels such as the 1KGP or the Human Genome Diversity Project (HGDP)\cite{cann2002human}.  As with PCA, researchers can either perform the dimensional reduction jointly or project one dataset onto UMAP embeddings of a reference data. In most surveyed literature, data are restricted to common variants with a minor allele frequency (MAF) greater than some threshold, e.g. $0.01$. However, UMAP can be used on any subset of interest.
+The most straightforward and common use of UMAP is for visualization. This has proven useful for data composed of relatively homogeneous populations as well as those with considerable diversity in ancestries. UMAP will dedicate more visual space to larger populations within a cohort, and consequently can illustrate the ancestral composition of a cohort in the context of its population structure as well as the size of the data. Often these data are combined with reference panels such as the 1000GP or the Human Genome Diversity Project (HGDP)\cite{cann2002human}.  As with PCA, researchers can either perform the dimensionality reduction jointly or project one dataset onto UMAP embeddings of reference data. In most surveyed literature, data are restricted to common variants with a minor allele frequency (MAF) greater than some threshold, e.g. $0.01$. However, UMAP can be used on any subset of interest.
 
-In the first use of UMAP in population genetics, we demonstrated how UMAP illustrates fine-scale structure and clustering in datasets, and that it is well-suited to data with a high number of significant PCs\cite{diaz-papkovich_umap_2019}.  Figures~\ref{fig:PCA_and_UMAP} and \ref{fig:UMAP_fine_scale} use 1000GP data to show how UMAP emphasizes local structure over PCA's focus on global variation. Because of its sampling of distinct population with comparable sample sizes, the 1000GP visualizations reveal distict groups of equal size. Figures~\ref{fig:UKB_PCA} and \ref{fig:UKB_UMAP} visualize the UK biobank (UKB)\cite{sudlow2015uk} data using PCA and UMAP, respectively, showing how UMAP simultaneously reveals continental and subcontintental ancestries in the context of each population's size and the relationships between them. Figures~\ref{fig:gnomAD_UMAP} and \ref{fig:BBJ_UMAP} visualize, respectively, the Genome Aggregation Database (gnomAD v3) from the Broad Institute\cite{karczewski_mutational_2020} and Biobank Japan (BBJ)\cite{nagai2017overview}\cite{sakaue_dimensionality_2020}, each of which contains over $100,000$ individuals. The former is composed of an ancestrally diverse American population, while the latter is relatively more homogeneous.
+In the first use of UMAP in population genetics, we demonstrated how it illustrates fine-scale structure and clustering in datasets, and that it is well-suited to data with a high number of significant PCs\cite{diaz-papkovich_umap_2019}.  Figure~\ref{fig:PCA_and_UMAP} uses 1000GP data to show how UMAP emphasizes local structure over PCA's focus on global variation. Because of its sampling of distinct population with comparable sample sizes, the 1000GP visualizations reveal distict groups of equal size. Figures~\ref{fig:UKB_PCA} and \ref{fig:UKB_UMAP} visualize the UK biobank (UKB)\cite{sudlow2015uk} data using PCA and UMAP, respectively, showing how UMAP simultaneously reveals continental and subcontintental ancestries in the context of each population's size and the relationships between them. Figures~\ref{fig:gnomAD_UMAP} and \ref{fig:BBJ_UMAP} visualize, respectively, the Genome Aggregation Database (gnomAD v3) from the Broad Institute\cite{karczewski_mutational_2020} and Biobank Japan (BBJ)\cite{nagai2017overview}\cite{sakaue_dimensionality_2020}, each of which contains over $100,000$ individuals. The former is composed of an ancestrally diverse American population, while the latter is relatively more homogeneous.
 
 %; and the genotypes of the descendents of Transatlantic Slave Trade \cite{micheletti_genetic_2020}
-In data with more varied ancestries, such as the UKB and gnomAD, but also  Bio\textit{} \cite{\cite{belbin_towards_2019}} and the Million Veterans Program (MVP) \cite{hunter-zinck_genotyping_2020}, UMAP tends to highlight broad ancestral groups and admixture history, whereas in relatively more homogenous populations such as BBJ, it highlights clusters related to geographic features like island populations. 
+In data with more varied ancestries, such as the UKB and gnomAD, but also Bio\textit{Me}\cite{belbin_towards_2019} and the Million Veterans Program (MVP) \cite{hunter-zinck_genotyping_2020}, UMAP tends to highlight broad ancestral groups and admixture history, whereas in relatively more homogenous populations such as BBJ, it highlights clusters related to geographic features like island populations. 
 
 UMAP has also been successfully used with ancient DNA samples combined with modern and contemporary populations to identify shared population structure\cite{margaryan_population_2019}, as well as animal populations to study spatial introgression in mussels\cite{simon_local_2019}, genetic bottlenecks in the white rhino population\cite{sanchez-barreiro_historical_2020}, and the geographic origin of disease-carrying mosquitoes\cite{consortium_genome_2020}\cite{schmidt_population_2020}. 
 
@@ -154,7 +144,7 @@ Within Tukey's paradigm of exploratory data analysis, visualization with UMAP ca
 
 One promising application is the use of clusters as covariates in GWAS and polygenic scores (PGS). Fine-scale population structure continues to confound studies of polygenic traits whether in studies of ancestrally diverse or relatively homogeneous populations (e.g. \cite{kerminen2019geographic}, \cite{berg2019reduced}, \cite{sohail2019polygenic}), making it an important area of study. Sakaue et al. used UMAP to identify substructure within the Japanese population, separating it into a mainland population and Hokkaido-Ainu with surrounding islands, reflecting known demographic history in Japan\cite{sakaue_dimensionality_2020}. They identified systematic shifts across UMAP clusters in PGS across multiple traits. 
 
-Data cleaning, including LD thinning, is particularly important when performing UMAP. Certain regions, such as the human leukocyte antigen (HLA) region in the genome, can unduly influence clustering results. Whereas the influence of HLA might be only observed in a higher-order PC, UMAP might bring haplotype differences to focus.  We illustrate such a result in \adpcomment{LUKE GOES HERE.} using data from genizon. 
+Data cleaning, including LD thinning, is particularly important when performing UMAP. Certain regions, such as the human leukocyte antigen (HLA) region in the genome, can unduly influence clustering results. Whereas the influence of HLA might be only observed in a higher-order PC, UMAP might bring haplotype differences to focus. Using data from the Genizon Biobank of Qu\'{e}bec individuals\cite{genizon}, we show in figure~\ref{fig:HLA} how not filtering for HLA results in a completely separate cluster forming. 
 
 Similarly, Yamamoto et al use UMAP on mtDNA. Whereas UMAP correctly identified sub-haplogroup clusters of mitchondrial DNA it did not identify parent clusters as readily as PCA or phylogenetic analysis, and is not particularly suitable fo single-locus analysis. \cite{yamamoto_genetic_2020}. 
 
@@ -166,18 +156,15 @@ Similarly, Yamamoto et al use UMAP on mtDNA. Whereas UMAP correctly identified s
 
 %as in figure~\ref{fig:PCA_and_UMAP} where the 1KGP populations form individual clusters
 
-UMAP is now used regularly to visualize the ancestral composition of cohorts as well as to examine fine-scale population structure and subtle patterns in biobanks of all compositions. In this sense, UMAP --- and dimension reduction at large --- is to data what a microscope is to biological samples: an effective tool to scientifically examine a subject and provoke deeper investigation. In both cases, calibration is an important factor, as is understanding the tool's limitations. The main parameters to calibrate in UMAP are the number of nearest neighbours (NN) and the minimum distance (MD). Studies varied in their parameter selection, but generally chose NN close to $15$; setting $NN < 10$ can result in separated clusters made up of closely-related individuals, such as families. The minimum distance was usually $0.1 < MD < 0.5$; values of $MD$ close to $0$ create very tight clusters, which can be appropriate for  downstream process such as cluster analysis but less pleasing visually. We recommend running multiple parametrizations and to combine UMAP plots with PCA plots and methods like fineSTRUCTURE\cite{lawson2012inference}, ADMIXTURE\cite{alexander2009fast}, or traditional statistics such as $F_{ST}$ to make inferences.
+UMAP is now used regularly to visualize the ancestral composition of cohorts as well as to examine fine-scale population structure and subtle patterns in biobanks of all compositions. In this sense, UMAP --- and dimensionality reduction at large --- is to data what a microscope is to biological samples: an effective tool to scientifically examine a subject and provoke deeper investigation. In both cases, calibration is an important factor, as is understanding the tool's limitations. The main parameters to calibrate in UMAP are the number of nearest neighbours (NN) and the minimum distance (MD). Studies varied in their parameter selection, but generally chose NN close to $15$; setting $NN < 10$ can result in separated clusters made up of closely-related individuals, such as families. The minimum distance was usually $0.1 < MD < 0.5$; values of $MD$ close to $0$ create very tight clusters, which can be appropriate for  downstream process such as cluster analysis but less pleasing visually. We recommend running multiple parametrizations and to combine UMAP plots with PCA plots and methods like fineSTRUCTURE\cite{lawson2012inference}, ADMIXTURE\cite{alexander2009fast}, or traditional statistics such as $F_{ST}$ to make inferences. As with PCA and other dimensionality reduction methods, genetically-defined clusters represent some degree of shared ancestry; while correlated with variables like self-identified ethnicity or race, they are distinct concepts and not interchangeable.
 
-As with PCA, genetically-defined clusters represent shared ancestry and are often correlated with self-identified ethnicity or race. It is important to keep such distinctions in mind.
-
-[[expand a bit: UMAP keeps being updated with new visualization tools. For example, a recent update enabled visualization of ...]] 
-Visualizing the simplicial complex underlying the algorithm can highlight how groups or individuals in a dataset influence clustering effects. We demonstrate this using the genotype data from the 1KGP in figure~\ref{fig:UMAP_connectivity}. Increasing the value of $NN$ increases the size of the complex and the connectedness of clusters, though this comes at a higher computational cost. Clusters such as the Luhya (LWK) in figure~\ref{fig:UMAP_low_NN_1KGP}, are brought closer to other populations, shown in figure~\ref{fig:UMAP_high_NN_1KGP}. With $NN=15$, the simplicial complexes of South Asia and East Asia do not connect to other populations; that is, for each cluster, every individual's $15$ closest genetic neighbours fall within the cluster. After raising $NN$ to $200$, all continental clusters become connected, demonstrated in figures~\ref{fig:UMAP_low_NN_connectivity} and \ref{fig:UMAP_high_NN_connectivity}.
+The reference implementation of UMAP is regularly updated with new features\cite{mcinnes2018software}. A recent update enabled visualization of the simplicial complex underlying the algorithm, which can highlight how groups or individuals in a dataset influence clustering effects. We demonstrate this using the genotype data from the 1000GP in figure~\ref{fig:UMAP_connectivity}. Increasing the value of $NN$ increases the size of the complex and the connectedness of clusters, though this comes at a higher computational cost. Clusters such as the Luhya (LWK) in figure~\ref{fig:UMAP_low_NN_1KGP}, are brought closer to other populations, shown in figure~\ref{fig:UMAP_high_NN_1KGP}. With $NN=15$, the simplicial complexes of South Asia and East Asia do not connect to other populations; that is, for each cluster, every individual's $15$ closest genetic neighbours fall within the cluster. After raising $NN$ to $200$, all continental clusters become connected, demonstrated in figures~\ref{fig:UMAP_low_NN_connectivity} and \ref{fig:UMAP_high_NN_connectivity}.
 
 \section*{Conclusion}
-With its effective performance and widespread use in under two years, UMAP shows considerable promise as part of the toolbox of a population geneticist, especially in the case of large cohorts. Beyond its capacity to visualize data, it holds promise for downstream methods such as clustering, correction for fine-scale population structure in GWAS and PRS, and identifying unique demographic histories. We anticipate that UMAP and/or related methods of dimension reduction will continue to find applications in the field, bolstering our exploration and understanding of human genomic data and the study of complex polygenic traits.
+With its effective performance and widespread use in under two years, UMAP shows considerable promise as part of the toolbox of a population geneticist, especially in the case of large cohorts. Beyond its capacity to visualize data, it holds promise for downstream methods such as clustering, correction for fine-scale population structure in GWAS and PGS, and identifying unique demographic histories. We anticipate that UMAP and/or related methods of dimensionality reduction will continue to find applications in the field, bolstering our exploration and understanding of human genomic data and the study of complex polygenic traits.
 
 \section*{Materials and methods}
-All code used to process data and generate images is available at \url{https://github.com/diazale/umap_review}. We used genotype data from $3,450$ individuals from the 1KGP using Affy 6.0 genotyping\cite{10002015global}. Genotype data from the 1KGP is available at \url{http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/hd_genotype_chip/} and \url{http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/}. Visualizations were done with matplotlib\cite{Hunter2007} and PCA was done using sklearn\cite{scikit-learn}.
+All code used to process 1000GP data and generate images is available at \url{https://github.com/diazale/umap_review}. We used genotype data from $3,450$ individuals from the 1000GP using Affy 6.0 genotyping\cite{10002015global}. Genotype data from the 1000GP is available at \url{http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/hd_genotype_chip/} and \url{http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/}. Visualizations were done with matplotlib\cite{Hunter2007} and PCA was done using sklearn\cite{scikit-learn}.
 
 %%%%% FIGURES %%%%%
 
@@ -195,7 +182,7 @@ All code used to process data and generate images is available at \url{https://g
     \caption{}
     \label{fig:UMAP}
   \end{subfigure}
-  \caption{Visualizations of data from the 1KGP. The first two principal components (left) versus a two-dimensional UMAP embedding (right).     ACB, African Caribbean in Barbados;
+  \caption{Visualizations of data from the 1000GP. The first two principal components (left) versus a two-dimensional UMAP embedding (right).     ACB, African Caribbean in Barbados;
     ASW, African Ancestry in Southwest US;
     BEB, Bengali;
     CDX, Chinese Dai;
@@ -223,15 +210,6 @@ All code used to process data and generate images is available at \url{https://g
     YRI, Yoruba in Nigeria }
   \label{fig:PCA_and_UMAP}
 \end{figure}
-
-\clearpage
-
-\begin{figure}
-  \includegraphics[width=\linewidth]{code/images/1KGP_PCA_UMAP.png}
-  \caption{UMAP on the top 15 PCs of 1KGP data results in many populations forming their own clusters. Such distinct clustering may be a consequence of the composition of the dataset, which comprises a relatively balanced sample of many different populations. Adding many of the top PCs (e.g. the top $200$) will create an embedding more similar to Fig.~\ref{fig:UMAP}. }
-  \label{fig:UMAP_fine_scale}
-\end{figure}
-
 
 \clearpage
 
@@ -269,6 +247,14 @@ All code used to process data and generate images is available at \url{https://g
   \label{fig:external_UMAP}
 \end{figure}
 
+\clearpage
+
+\begin{figure}[h!]
+  \centering
+    \includegraphics[width=\linewidth]{external_images/umap_hla_comparison_highlighted.jpg}
+  \caption{UMAP with (left) and without (right) HLA regions used on the Genizon database. The cluster in the dotted lines disappears when filtering for HLA and linkage disequilibrium.}
+  \label{fig:HLA}
+\end{figure}
 
 \clearpage
 
@@ -294,7 +280,7 @@ All code used to process data and generate images is available at \url{https://g
     \caption{Connectivity map of 200 neighbours.}
     \label{fig:UMAP_high_NN_connectivity}
   \end{subfigure}
-  \caption{UMAP projection of the same genotype data from the 1KGP comparing parametrization with a small (left) and large (right) number of nearest neighbours. Top images are coloured by population; bottom images are the same points but with the simplicial complex drawn. When adding more neighbours, clusters become less separated, as with the LWK population, for example. Looking at the connectivity maps, we see new connections between continental groups, such as the Central/South American clusters and East Asian clusters. Darker lines indicate that individuals are closer to each other in genotype space.}
+  \caption{UMAP projection of the same genotype data from the 1000GP comparing parametrization with a small (left) and large (right) number of nearest neighbours. Top images are coloured by population; bottom images are the same points but with the simplicial complex drawn. When adding more neighbours, clusters become less separated, as with the LWK population, for example. Looking at the connectivity maps, we see new connections between continental groups, such as the Central/South American clusters and East Asian clusters. Darker lines indicate that individuals are closer to each other in genotype space.}
   \label{fig:UMAP_connectivity}
 \end{figure}
 
@@ -309,33 +295,3 @@ All code used to process data and generate images is available at \url{https://g
 
 
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%Bio\textit{Me} biobank, a multi-ethnic cohort from New York City, visualized $31,705$ genotyped individuals combined with a reference panel of $87$ individuals from $7$ continental or subcontinental regions using the 1KGP, HGDP, and the Population Architecture Using Genetics and Epidemiology (PAGE) Study\cite{matise2011next}. The Million Veterans Program (MVP) is another ethnically diverse American dataset, composed of $459,777$ veterans. About $30\%$ of the cohort is made up of individuals having African, East Asian, and Native American ancestry\cite{hunter-zinck_genotyping_2020}, making UMAP a good candidate for visualizing the array of backgrounds.
-
-% First paragraph: first use of UMAP and what it showed
-%In the first use of UMAP in population genetics, we visualized the populations in the 1KGP, Health and Retirement Study (HRS)\cite{juster1995overview}, and UK biobank (UKB)\cite{sudlow2015uk} using their genotypic data. UMAP illustrated fine-scale structure and could highlight unique distributions of phenotypes and clusters of individuals. Clusters could arise from close relations between individuals, or from unique demographic histories. We recommended to execute multiple runs of UMAP while varying parameters to judge how stable patterns were and to analyze them further with other methods\cite{diaz-papkovich_umap_2019}.
-
-%In the first use of UMAP in population genetics, we demonstrated how UMAP illustrates fine-scale structure in datasets including the 1KGP and the UK biobank(UKB)\cite{sudlow2015uk}\cite{diaz-papkovich_umap_2019}. Figures~\ref{fig:PCA_and_UMAP} and \ref{fig:UMAP_fine_scale} show how UMAP emphasizes local structure over PCA's focus on global variation, and how this generates clusters using 1KGP data. Unlike the 1KGP, the UKB data is much very ancestrally diverse and contains widely varying population sizes. Figure~\ref{fig:UKB} highlights how for such a cohort UMAP can simultaneously show the fine-scale structure within the British and Irish populations, as well as the structure of those with non-European ancestries, and the relative sizes of all the groups.
-
-%\sgcomment{I wonder if it would be worth including these large cohort plots in here, and comment on them? Right now, it is not immediately clear to me what message you are trying to get across, and you give a lot of details that might not be so useful to the reader... Maybe try to convey the big picture: When applied to large-scale, ancestrally diverse cohort, UMAP tends to reveal both continental and sub-continental clusters with rather straightforward interpretation [talk about some of the findings?}
-
-%These visualizations are now used regularly in characterizing the ancestral composition of genetic cohorts with many ancestries. The Genome Aggregation Database (gnomAD v3) from the Broad Institute visualized $141,456$ exome and whole genome sequences\cite{karczewski_mutational_2020}, and Bio\textit{Me} biobank, a multi-ethnic cohort from New York City, visualized $31,705$ genotyped individuals combined with a reference panel of $87$ individuals from $7$ continental or subcontinental regions using the 1KGP, HGDP, and the Population Architecture Using Genetics and Epidemiology (PAGE) Study\cite{matise2011next}. The Million Veterans Program (MVP) is another ethnically diverse American dataset, composed of $459,777$ veterans. About $30\%$ of the cohort is made up of individuals having African, East Asian, and Native American ancestry\cite{hunter-zinck_genotyping_2020}, making UMAP a good candidate for visualizing the array of backgrounds.
