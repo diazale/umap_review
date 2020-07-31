@@ -1,0 +1,212 @@
+---
+title: "UMAP with and without HLA"
+author:
+- name: Luke Anderson-Trocmé,
+  affiliation:
+  - &cruk Department of Human Genetics, McGill University,  Montreal, Canada
+date: '`r format(Sys.Date(), "%Y-%B-%d")`'
+output:
+  html_notebook:
+    df_print: paged
+    code_folding: show
+    toc: yes
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(data.table)
+library(cowplot)
+library(dplyr)
+library(uwot)
+
+#Set Path
+dataPath <- '/Users/luke/Documents/Genizon/Data/march_impute/all_chr/'
+figurePath <- '~/Documents/Genizon/Genizon_Scripts/Latex/Figures/'
+#Set Names
+hla_pca_name <- "all_chr_drop.eigenvec"
+no_hla_pca_name <- "all_chr_no_hla_drop.eigenvec"
+```
+
+```{r}
+##convert XYZ to RGB
+XYZ_RGB <-
+  function(xyz) {
+    
+    #normalize X,Y,Z to convert to RGB
+    X <- (xyz[,1] - min(xyz[,1])) /
+      (max(xyz[,1]) - min(xyz[,1]))
+    Y <- (xyz[,2] - min(xyz[,2])) /
+      (max(xyz[,2]) - min(xyz[,2]))
+    Z <- (xyz[,3] - min(xyz[,3])) /
+      (max(xyz[,3]) - min(xyz[,3]))
+    
+    #in case there are missing values
+    X[is.na(X)] <- 0
+    Y[is.na(Y)] <- 0
+    Z[is.na(Z)] <- 0
+    
+    #convert to RGB
+    out <- rgb(unlist(X),
+               unlist(Y),
+               unlist(Z))
+    
+    return(out)
+  }
+
+##Load genotype data, run UMAP
+#THIS ASSUMES FIRST TWO COLUMNS ARE IDs
+color_3D_umap <- function(pca, a, b){
+
+  #Run UMAP on PCA
+  umap_2D <-
+    as.data.frame(umap(pca[,-c(1,2)],
+                       n_components = 2,
+                       a = a,
+                       b = b))
+  
+  names(umap_2D) <- c("UMAP1_2D","UMAP2_2D")
+  
+  projections <-
+    cbind(umap_2D,pca)
+  
+  umap_3D <-
+    as.data.frame(umap(pca[,-c(1,2)],
+                       n_components = 3,
+                       a = a,
+                       b = b))
+  
+  names(umap_3D) <- c("UMAP1_3D",
+                      "UMAP2_3D",
+                      "UMAP3_3D")
+  
+  projections <-
+    cbind(umap_2D,umap_3D,pca)
+  
+  #XYZ-RGB conversion
+  projections$RGB <-
+    XYZ_RGB(projections[,c('UMAP1_3D',
+                           'UMAP2_3D',
+                           'UMAP3_3D')])
+  
+  return(projections)
+}
+```
+#Genizon UMAP
+##Load genotype data, run UMAP and HDBSCAN
+```{r}
+a <- 6
+b <- 0.65
+
+##WITH HLA
+pca_hla <-
+  read.table(paste0(dataPath,hla_pca_name), header = F)
+## rename columns for ease of use downstream
+names(pca_hla)[c(1,2)] <- c('FID','IID')
+names(pca_hla)[-c(1,2)] <- paste0(rep("PC"), "_",1:20)
+
+##WITHOUT HLA
+pca_no_hla <-
+  read.table(paste0(dataPath,no_hla_pca_name), header = F)
+## rename columns for ease of use downstream
+names(pca_no_hla)[c(1,2)] <- c('FID','IID')
+names(pca_no_hla)[-c(1,2)] <- paste0(rep("PC"), "_",1:20)
+
+#for(a in seq(5,8,0.25)) {
+#  for(b in seq(0.5,0.7,0.05)){
+    print(paste("working on a:",a,"and b:",b))
+    
+    umap_hla <- color_3D_umap(pca_hla, a, b)
+    
+    umap_no_hla <- color_3D_umap(pca_no_hla, a, b)
+    
+    combined <- 
+      full_join(umap_hla, 
+                umap_no_hla, 
+                by = c("FID","IID"), 
+                suffix = c("_hla","_no_hla"))
+    
+    hla <-
+      ggplot(combined ,   
+             aes(x = -UMAP2_2D_hla,
+                 y = -UMAP1_2D_hla,
+                 color = RGB_no_hla)) +
+      scale_colour_identity() +
+      geom_point(size=0.5,
+                 alpha=0.5) +
+      theme_classic() +
+      labs(x = "UMAP 2", 
+           y = "UMAP 1", 
+           title = "UMAP with HLA") +
+      theme(axis.ticks = element_blank(),
+            axis.text = element_blank(),
+            plot.title = element_text(hjust = 0.5))
+    
+    no_hla <-
+      ggplot(combined ,   
+             aes(x = UMAP2_2D_no_hla,
+                 y = UMAP1_2D_no_hla,
+                 color = RGB_no_hla)) +
+      scale_colour_identity() +
+      geom_point(size=0.5,
+                 alpha=0.5) +
+      theme_classic() +
+      labs(x = "UMAP 2", 
+           y = "UMAP 1", 
+           title = "UMAP without HLA") +
+      theme(axis.ticks = element_blank(),
+            axis.text = element_blank(),
+            plot.title = element_text(hjust = 0.5))
+    
+    plt <- plot_grid(hla, no_hla)
+
+    ggsave(plt, file = paste0(figurePath,"umap_with_without_hla_",a,"_",b,".jpg"), height = 5, width = 10)
+#  }
+#}
+
+
+```
+
+```{r}
+
+hla_nc <-
+  ggplot(combined ,   
+         aes(x = -UMAP2_2D_hla,
+             y = -UMAP1_2D_hla,
+             color = RGB_hla)) +
+  scale_colour_identity() +
+  geom_point(size=0.5,
+             alpha=0.2) +
+  theme_classic() +
+  labs(x = "UMAP 1", 
+       y = "UMAP 2", 
+       title = "UMAP with HLA") +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        plot.title = element_text(hjust = 0.5))
+
+
+no_hla_nc <-
+  ggplot(combined ,   
+         aes(x = UMAP2_2D_no_hla,
+             y = UMAP1_2D_no_hla,
+             color = RGB_hla)) +
+  scale_colour_identity() +
+  geom_point(size=0.5,
+             alpha=0.2) +
+  theme_classic() +
+  labs(x = "UMAP 2", 
+       y = "UMAP 1", 
+       title = "UMAP without HLA") +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        plot.title = element_text(hjust = 0.5))
+
+plt_nc <- plot_grid(hla_nc, no_hla_nc)
+
+plt_nc
+
+ggsave(plt_nc, file = paste0(figurePath,"umap_with_without_hla_",a,"_",b,"_nc.jpg"), height = 5, width = 10)
+```
