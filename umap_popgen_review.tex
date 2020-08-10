@@ -123,11 +123,11 @@ By focusing on preserving topology rather than absolute distances, UMAP represen
 In the context of genetic data, UMAP finds the nearest genetic neighbours for each individual and creates low-dimensional representations that group more closely-related individuals together, and partially preserves longer-range relatedness through intermediary individuals. When used in visualizations, UMAP embeddings uncover many subtle features of data, such as distinct demographic histories and covariation between genetics, geography, and phenotypes\cite{diaz-papkovich_umap_2019}. Figure~\ref{fig:PCA_and_UMAP} compares visualizations of PCA to UMAP using genotype data from the Thousand Genomes Project (1000GP)\cite{10002015global}. PCA flattens the third dimension, obsuring the distinction between South Asian and Central/South American population clusters, whereas UMAP places them in more clearly visible clusters. UMAP has become widely used to study population structure in humans and other species, in conjunction with existing methods. Here we will describe the current state of the use of UMAP in population genetics.
 
 \section*{Visualizing genomic cohorts}
-The most straightforward and common use of UMAP is for visualization. This has proven useful for data composed of relatively homogeneous populations as well as those with considerable diversity in ancestries. UMAP will dedicate more visual space to larger populations within a cohort, and consequently can illustrate the ancestral composition of a cohort in the context of its population structure as well as the size of the data. Often these data are combined with reference panels such as the 1000GP or the Human Genome Diversity Project (HGDP)\cite{cann2002human}.  As with PCA, researchers can either perform the dimensionality reduction jointly or project one dataset onto UMAP embeddings of reference data. In most surveyed literature, data are restricted to common variants with a minor allele frequency (MAF) greater than some threshold, e.g. $0.01$. However, UMAP can be used to identify population structure on any subset of interest. \sgcomment{Do we have a recommendation?}
+The most straightforward and common use of UMAP is for visualization. This has proven useful for data composed of relatively homogeneous populations as well as those with considerable diversity in ancestries. UMAP will dedicate more visual space to larger populations within a cohort, and consequently can illustrate the ancestral composition of a cohort in the context of its population structure as well as the size of the data. Often these data are combined with reference panels such as the 1000GP or the Human Genome Diversity Project (HGDP)\cite{cann2002human}.  As with PCA, researchers can either perform the dimensionality reduction jointly or project one dataset onto UMAP embeddings of reference data. In most surveyed literature, data are restricted to common variants with a minor allele frequency (MAF) greater than some threshold, e.g. $0.01$, which we found sufficient in our earlier analyses. However, UMAP can be used to identify population structure on any subset of interest. \sgcomment{Do we have a recommendation?} /adpcomment{Added a small clause that we used 0.01 and it turned out fine}
 
 Data cleaning, including LD thinning, is particularly important when performing UMAP. Certain regions, such as the human leukocyte antigen (HLA) region in the genome, can unduly influence clustering and visualization results. Whereas the influence of HLA might be only observed in a higher-order PC, UMAP can identify the clustering of haplotypes at a single, densely typed locus and represent carriers of that haplotype as a distinct cluster (figure~\ref{fig:HLA}). LD thinning addresses this issue. Thus careful data preparation is particularly important for UMAP, and researchers should resist the tendency to assign a demographic explanation to each cluster without careful analysis. 
 
-Comparing PCA and UMAP on two datasets shows how the sampling scheme influences UMAP representation. In the 1000 Genomes project, which sampled individuals from geographically or culturally distinct groups, UMAP identifies the different groups \ref{fig:PCA_and_UMAP. By contrast, UKB performed population-based sampling, and captures individuals with different levels of admixture from different ancestries. UMAP therefore identifies admixture "bridges" between the different clusters (Figures \ref{fig:UKB_PCA}  and \ref{fig:UKB_UMAP} \sgcomment{merge?}). Whereas PCA for both datasets present fairly recognizable aspects of genetic variation related to the Out-of-Africa expansion, which is quite useful as a sanity check and for interpretation, UMAP arguably provides a more detailed representation of the relationships among study participants. 
+Comparing PCA and UMAP on two datasets shows how the sampling scheme influences UMAP representation. In the 1000GP, which sampled individuals from geographically or culturally distinct groups, UMAP identifies the different groups \ref{fig:PCA_and_UMAP}. By contrast, the UKB performed population-based sampling, and captures individuals with different levels of admixture from different ancestries. UMAP therefore identifies admixture ``bridges'' between the different clusters (figure~\ref{fig:UKB}). Whereas PCA for both datasets present fairly recognizable aspects of genetic variation related to the out-of-Africa expansion, which is useful as a sanity check and for interpretation, UMAP arguably provides a more detailed representation of the relationships among study participants. 
 
 Since its goal is to reveal fine-scale population structure, UMAP is particularly well-suited to data with a high number of significant PCs, and can also extract population structure signal from the collection of high-order PCs. \cite{diaz-papkovich_umap_2019}.  Figures~\ref{fig:gnomAD_UMAP} and \ref{fig:BBJ_UMAP} visualize, respectively, the Genome Aggregation Database (gnomAD v3) from the Broad Institute\cite{karczewski_mutational_2020} and Biobank Japan (BBJ)\cite{nagai2017overview}\cite{sakaue_dimensionality_2020}, each of which contains over $100,000$ individuals. While applications to ethnically diverse groups such as UKB, Bio\textit{Me}\cite{belbin_towards_2019} and the Million Veterans Program (MVP) \cite{hunter-zinck_genotyping_2020}, UMAP tends to highlight groups with different international migration and admixture history. In a relatively more homogenous populations such as BBJ, it highlights clusters related to geographic features such as island populations.
 
@@ -200,19 +200,26 @@ All code used to process 1000GP data and generate images is available at \url{ht
 
 \clearpage
 
+%\begin{figure}[h!]
+%  \centering
+%  \begin{subfigure}[b]{0.49\linewidth}
+%    \includegraphics[width=\linewidth]{code/ukb/images/ukbb_pca_coords_eth.png}
+%    \caption{A PCA projection of the UKB data.}
+%    \label{fig:UKB_PCA}
+%  \end{subfigure}
+%  \begin{subfigure}[b]{0.49\linewidth}
+%    \includegraphics[width=\linewidth]{code/ukb/images/UKBB_UMAP_PC20_NC2_NN15_MD05_2018454111_eth.png}
+%    \caption{UMAP on the top 20 PCs of the UKB.}
+%    \label{fig:UKB_UMAP}
+%  \end{subfigure}
+%  \caption{PCA and UMAP projections of the UKB data, coloured by self-identified ethnic background. Unlike PCA, UMAP focuses on preserving local relationships and emphasizes fine-scale patterns in data. Groups in the UMAP projection are less compressed showing, for example, the relative size of the British and Irish populations in the UKB, alongside populations of other ancestries, while simultaneously showing the population structure between and within groups.}
+%  \label{fig:UKB}
+%\end{figure}
+
 \begin{figure}[h!]
   \centering
-  \begin{subfigure}[b]{0.49\linewidth}
-    \includegraphics[width=\linewidth]{code/ukb/images/ukbb_pca_coords_eth.png}
-    \caption{A PCA projection of the UKB data.}
-    \label{fig:UKB_PCA}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.49\linewidth}
-    \includegraphics[width=\linewidth]{code/ukb/images/UKBB_UMAP_PC20_NC2_NN15_MD05_2018454111_eth.png}
-    \caption{UMAP on the top 20 PCs of the UKB.}
-    \label{fig:UKB_UMAP}
-  \end{subfigure}
-  \caption{PCA and UMAP projections of the UKB data, coloured by self-identified ethnic background. Unlike PCA, UMAP focuses on preserving local relationships and emphasizes fine-scale patterns in data. Groups in the UMAP projection are less compressed showing, for example, the relative size of the British and Irish populations in the UKB, alongside populations of other ancestries, while simultaneously showing the population structure between and within groups.}
+    \includegraphics[width=\linewidth]{code/ukb/images/ukbb_montage.png}
+  \caption{PCA (left) and UMAP (right) projections of the UKB data, coloured by self-identified ethnic background. Unlike PCA, UMAP focuses on preserving local relationships and emphasizes fine-scale patterns in data. Groups in the UMAP projection are less compressed showing, for example, the relative size of the British and Irish populations in the UKB, alongside populations of other ancestries, while simultaneously showing the population structure between and within groups.}
   \label{fig:UKB}
 \end{figure}
 
