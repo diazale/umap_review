@@ -148,7 +148,7 @@ The reference implementation of UMAP is regularly updated with new features\cite
 With its effective performance and widespread use in under two years, UMAP shows considerable promise as part of the toolbox of a population geneticist, especially in the case of large cohorts. Beyond its capacity to visualize data, it holds promise for downstream methods such as clustering, correction for fine-scale population structure in GWAS and PGS, and identifying unique demographic histories. We anticipate that UMAP and/or related methods of dimensionality reduction will continue to find applications in the field, bolstering our exploration and understanding of human genomic data and the study of complex polygenic traits.
 
 \section*{Materials and methods}
-All code used to process 1000GP data and generate images is available at \url{https://github.com/diazale/umap_review}. We used genotype data from $3,450$ individuals from the 1000GP using Affy 6.0 genotyping\cite{10002015global}. Genotype data from the 1000GP is available at \url{http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/hd_genotype_chip/} and \url{http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/}. Visualizations were done with matplotlib\cite{Hunter2007} and PCA was done using sklearn\cite{scikit-learn}.
+All code used to process 1000GP data and generate images is available at \url{https://github.com/diazale/umap_review}. We used genotype data from $3,450$ individuals from the 1000GP using Affy 6.0 genotyping\cite{10002015global}. Genotype data from the 1000GP is available at \url{http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/hd_genotype_chip/} and \url{http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/phase3/}. The Genizon cohort is comprised of $7,843$ genotyped individuals from Quebec. The genotype data from this cohort was compiled from 4 different chips (HumanHap375, HumanHap550, Illumina1M and Human610-Quad). The missing data from the merging of these datasets was imputed using the Michigan Imputation Server.  The UKBB provides genotype data and principal components on $488,377$ individuals. Visualizations were done with matplotlib\cite{Hunter2007} and PCA was done using sklearn\cite{scikit-learn}. 
 
 %%%%% FIGURES %%%%%
 
@@ -219,7 +219,7 @@ All code used to process 1000GP data and generate images is available at \url{ht
     \caption{BBJ data visualized using UMAP.}
     \label{fig:BBJ_UMAP}
   \end{subfigure}
-  \caption{The Genome Aggregation Database (gnomAD, left) and Biobank Japan (BBJ, right) visualized using UMAP. UMAP illustrates the ancestral diversity of gnomAD, showing many the relationships between populations on continental and subcontinental levels. For the relatively more homogeneous BBJ data, it splits data geographically into the large mainland cluster (consisting of Hokkaido, Tohoku, Kanto-Koshinetsu, Chubu-Hokuriku, Kinki, and Kyushu regions), and smaller non-mainland clusters.}
+  \caption{The Genome Aggregation Database (gnomAD, left, from  \cite{karczewski_mutational_2020}) and Biobank Japan (BBJ, right, from \cite{nagai2017overview}) visualized using UMAP. UMAP illustrates the ancestral diversity of gnomAD, showing many the relationships between populations on continental and subcontinental levels. For the relatively more homogeneous BBJ data, it splits data geographically into the large mainland cluster (consisting of Hokkaido, Tohoku, Kanto-Koshinetsu, Chubu-Hokuriku, Kinki, and Kyushu regions), and smaller non-mainland clusters.}
   \label{fig:external_UMAP}
 \end{figure}
 
