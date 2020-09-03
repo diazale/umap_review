@@ -1036,6 +1036,7 @@ FUNCTION {format.organization.address}
 FUNCTION {article}
 { output.bibitem
   format.authors "author" output.check
+  format.title output
   crossref missing$
     { journal
       emphasize
